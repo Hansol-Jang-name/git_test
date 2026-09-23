@@ -1,1 +1,1 @@
-hello git
+Git 3주차 실습 테스트
