@@ -1,0 +1,28 @@
+name: World Cup 2022 xG analysis
+on:
+  push:
+    paths:
+      - 'wc2022_analysis.py'
+      - '.github/workflows/wc2022.yml'
+  workflow_dispatch:
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python wc2022_analysis.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wc2022-xg-results
+          path: results/
+      - name: Commit result CSV
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/
+          git diff --cached --quiet || (git commit -m "Save World Cup 2022 xG results" && git push)
