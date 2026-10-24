@@ -1,0 +1,23 @@
+name: RQ1 possession shot probability
+on:
+  push:
+    paths:
+      - '.github/workflows/wc2022-rq1.yml'
+  workflow_dispatch:
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python wc2022_rq1.py
+      - name: Save results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/rq1_*.csv
+          git diff --cached --quiet || (git commit -m "Save RQ1 results" && git push)
